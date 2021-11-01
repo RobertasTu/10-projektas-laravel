@@ -24,7 +24,16 @@
                                 <label for="paginationsetting_value" class="col-md-4 col-form-label text-md-right">{{ __('Pagination setting value:') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="paginationsetting_value" type="text" class="form-control @error('title') is-invalid @enderror" name="paginationsetting_value" value='{{$paginationsetting->value}}' required autocomplete="paginationsetting_value" autofocus>
+                                    <input id="paginationsetting_value" type="text" class="form-control @error('value') is-invalid @enderror" name="paginationsetting_value" value='{{$paginationsetting->value}}' required autocomplete="paginationsetting_value" autofocus>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="paginationsetting_visible" class="col-md-4 col-form-label text-md-right">{{ __('Pagination setting visible:') }}</label>
+
+                                <div class="col-md-6">
+                                    <input id="paginationsetting_visible" type="checkbox" class="form-control" name="paginationsetting_visible" @if($paginationsetting->visible) checked @endif value="1"  />
 
                                 </div>
                             </div>

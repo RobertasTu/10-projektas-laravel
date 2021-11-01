@@ -14,10 +14,13 @@
 
                             <div class="form-group row">
                                 <label for="paginationsetting_title" class="col-md-4 col-form-label text-md-right">{{ __('Pagination setting title:') }}</label>
-
                                 <div class="col-md-6">
-                                    <input id="paginationsetting_title" type="text" class="form-control @error('title') is-invalid @enderror" name="paginationsetting_title"  required autocomplete="paginationsetting_title" autofocus>
-
+                                    <input id="paginationsetting_title" type="text" class="form-control @error('paginationsetting_title') is-invalid @enderror" name="paginationsetting_title"  required autocomplete="paginationsetting_title" autofocus>
+                                    @error('paginationsetting_title')
+                                    <span role="alert" class="invalid-feedback">
+                                        {{$message}}
+                                    </span>
+                                @enderror
                                 </div>
                             </div>
 
@@ -25,8 +28,24 @@
                                 <label for="paginationsetting_value" class="col-md-4 col-form-label text-md-right">{{ __('Pagination setting value:') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="paginationsetting_value" type="text" class="form-control @error('value') is-invalid @enderror" name="paginationsetting_value"  required autocomplete="paginationsetting_value" autofocus>
+                                    <input id="paginationsetting_value" type="text" class="form-control @error('paginationsetting_value') is-invalid @enderror" name="paginationsetting_value"  required autocomplete="paginationsetting_value" autofocus>
+                                    @error('paginationsetting_value')
+                                    <span role="alert" class="invalid-feedback">
+                                        {{$message}}
+                                    </span>
+                                @enderror
+                                </div>
+                            </div>
 
+                            <div class="form-group row">
+                                <label for="paginationsetting_visible" class="col-md-4 col-form-label text-md-right">{{ __('Pagination setting visible:') }}</label>
+                                <div class="col-md-6">
+                                    <input id="paginationsetting_visible" type="checkbox" class="form-control @error('paginationsetting_visible') is-invalid @enderror" name="paginationsetting_visible" value='1'>
+                                    @error('paginationsetting_visible')
+                                    <span role="alert" class="invalid-feedback">
+                                        {{$message}}
+                                    </span>
+                                @enderror
                                 </div>
                             </div>
 

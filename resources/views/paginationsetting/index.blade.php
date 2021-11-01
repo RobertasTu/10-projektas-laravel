@@ -2,6 +2,7 @@
 
 @section('content')
 <div class='container'>
+    <a class='btn btn-secondary' href='{{route('owner.stat')}}'>Export Statistics</a>
 
     {{-- <form action='{{route('paginationsetting.search')}}' method='GET'>
         <input type='text' name='search' placeholder='enter your search key' />
@@ -46,6 +47,7 @@
         <th>ID</th>
         <th>Title</th>
         <th>Value</th>
+        <th>Visible</th>
         <th>Actions</th>
 
 
@@ -54,7 +56,8 @@
     <tr>
         <td>{{$paginationsetting->id}} </td>
         <td><a href="{{route('paginationsetting.show', [$paginationsetting])}}">{{$paginationsetting->title}} </td>
-        <td>{{$paginationsetting->value}}
+        <td>{{$paginationsetting->value}}</td>
+        <td>{{$paginationsetting->visible}}</td>
 
 
         <td>

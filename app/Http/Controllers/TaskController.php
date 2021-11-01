@@ -1,9 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Owner;
 use App\Type;
 use App\Task;
 use Illuminate\Http\Request;
+use App\PaginationSetting;
+use PDF;
 
 class TaskController extends Controller
 {
@@ -16,15 +19,31 @@ class TaskController extends Controller
     {
         $collumnName = $request->collumnName;
         $sortBy = $request->sortBy;
+
         if(!$collumnName && !$sortBy) {
             $collumnName = 'id';
             $sortBy = 'asc';
     }
+    $tasks = Task::all();
+
+    $allTasks = $tasks->count();
+
+    $paginationsettings = Paginationsetting::all();
+    $paginationsetting = $request->paginationsetting;
+    if(!$paginationsetting) {
+        $paginationsetting = $allTasks;
+    }
+
+    if($paginationsetting == '1') {
+        $paginationsetting = $allTasks;
+    }
 
 
-    $types =Type::all();
-    $tasks = Task::sortable()->paginate(5);
-     return view('task.index', ['tasks'=>$tasks, 'collumnName'=> $collumnName, 'sortBy'=>$sortBy], ['types'=>$types]);
+    $owners = Owner::all();
+    $types = Type::all();
+
+    $tasks = Task::sortable()->paginate($paginationsetting);
+     return view('task.index', ['tasks'=>$tasks, 'collumnName'=> $collumnName, 'sortBy'=>$sortBy, 'paginationsettings'=>$paginationsettings, 'owners'=>$owners], ['types'=>$types] );
 }
 
     /**
@@ -34,8 +53,9 @@ class TaskController extends Controller
      */
     public function create()
     {
+        $owners = Owner::all();
         $types = Type::all();
-        return view ('task.create', ['types'=>$types]);
+        return view ('task.create', ['types'=>$types], ['owners'=>$owners]);
     }
 
     /**
@@ -49,9 +69,13 @@ class TaskController extends Controller
         $task = new Task;
 
         $validateVar = $request->validate ([
-            'title' => 'required',
-            'task_start_date'=>'required|date|before:task_end_date',
-            'task_end_date'=>'required|date|after:task_start_date'
+            'task_title' => 'required|min:6|max:225|regex:/^[a-zA-Z]+$/u',
+            'task_description' => 'required|max:1500',
+            'task_start_date'=>'required|date',
+            'task_end_date'=>'required|date|after:task_start_date',
+            'task_logo' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000',
+            'task_owner_id' => 'required|numeric',
+            'task_typeid' => 'required|numeric',
         ]);
 
 
@@ -60,6 +84,7 @@ class TaskController extends Controller
         $task->type_id = $request->task_typeid;
         $task->start_date = $request->task_start_date;
         $task->end_date = $request->task_end_date;
+        $task->owner_id =$request->task_owner_id;
 
 
         if($request->has('task_logo')) {
@@ -109,9 +134,13 @@ class TaskController extends Controller
     public function update(Request $request, Task $task)
     {
         $validateVar = $request->validate ([
-            'task_title' => 'required',
-            'task_start_date'=>'required|date|before:task_end_date',
-            'task_end_date'=>'required|date|after:task_start_date'
+            'task_title' => 'required|min:6|max:225|regex:/^[a-zA-Z]+$/u',
+            'task_description' => 'required|max:1500',
+            'task_start_date'=>'required|date',
+            'task_end_date'=>'required|date|after:task_start_date',
+            'task_logo' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000',
+            'task_owner_id' => 'required|numeric',
+            'task_typeid' => 'required|numeric',
         ]);
         $task->title = $request->task_title;
         $task->description = $request->task_description;
@@ -155,6 +184,28 @@ class TaskController extends Controller
         // $tasks = Task::query()->where('type_id', $typeid)->paginate(5);
         $tasks = Task::sortable()->where('type_id', $typeid)->paginate(5);
         return view('task.filter', ['tasks'=>$tasks]);
+    }
+
+    public function paginate(Request $request) {
+
+        // $pagination = $request->task_pagination;
+        // $typeid = $request->task_typeid;
+        // $tasks = Task::sortable()->where('type_id', $typeid)->paginate($pagination);
+        // return view('task.index', ['tasks'=>$tasks]);
+
+        // tasks = Task::sortable()->where()
+    }
+    public function generateTaskPDF(Task $task) {
+        view()->share('task', $task);
+        $pdf = PDF::loadView('task/pdf_task_template', $task);
+        return $pdf->download('task'.$task->id.'.pdf');
+    }
+    public function generatePDF() {
+        $tasks = Task::all();
+
+        view()->share('tasks', $tasks);
+        $pdf = PDF::loadView('task/pdf_template', $tasks);
+        return $pdf->download('tasks.pdf');
     }
 }
 

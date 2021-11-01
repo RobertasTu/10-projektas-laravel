@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Kyslik\ColumnSortable\Sortable;
 use App\Type;
+use App\Owner;
 
 class Task extends Model
 {
@@ -15,5 +16,10 @@ class Task extends Model
 
     public function taskType() {
         return $this->belongsTo(Type::class, 'type_id', 'id');
+    }
+
+    public function taskOwner() {
+        return $this->belongsTo(Owner::class, 'owner_id', 'id');
+
     }
 }

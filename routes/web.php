@@ -28,6 +28,8 @@ Route::prefix('tasks')->group(function () {
     Route::get('show/{task}', 'TaskController@show')->name('task.show')->middleware('auth');
     Route::get('search','TaskController@search')->name('task.search')->middleware('auth');
     Route::get('filter','TaskController@filter')->name('task.filter')->middleware('auth');
+    Route::get('/pdf','TaskController@generatePDF')->name('task.pdf')->middleware('auth');
+    Route::get('pdfTask/{task}','TaskController@generateTaskPDF')->name('task.pdftask')->middleware('auth');
 
 });
 
@@ -41,6 +43,8 @@ Route::prefix('types')->group(function () {
     Route::post('delete/{type}', 'TypeController@destroy' )->name('type.destroy')->middleware('auth');
     Route::get('show/{type}', 'TypeController@show')->name('type.show')->middleware('auth');
     Route::get('search','TypeController@search')->name('type.search')->middleware('auth');
+    Route::get('/pdf','TypeController@generatePDF')->name('type.pdf')->middleware('auth');
+    Route::get('pdfType/{type}','TypeController@generateTypePDF')->name('type.pdftype')->middleware('auth');
 
 });
 
@@ -55,6 +59,24 @@ Route::prefix('paginationsettings')->group(function () {
     Route::get('show/{paginationsetting}', 'PaginationSettingController@show')->name('paginationsetting.show')->middleware('auth');
     Route::get('search','PaginationSettingController@search')->name('paginationsetting.search')->middleware('auth');
     Route::get('filter','PaginationSettingController@filter')->name('paginationsetting.filter')->middleware('auth');
+
+});
+
+Route::prefix('owners')->group(function () {
+
+    Route::get('','OwnerController@index')->name('owner.index')->middleware('auth');
+    Route::get('create', 'OwnerController@create')->name('owner.create')->middleware('auth');
+    Route::post('store', 'OwnerController@store')->name('owner.store')->middleware('auth');
+    Route::get('edit/{owner}', 'OwnerController@edit')->name('owner.edit')->middleware('auth');
+    Route::post('update/{owner}', 'OwnerController@update')->name('owner.update')->middleware('auth');
+    Route::post('delete/{owner}', 'OwnerController@destroy' )->name('owner.destroy')->middleware('auth');
+    Route::get('show/{owner}', 'OwnerController@show')->name('owner.show')->middleware('auth');
+    Route::get('search','OwnerController@search')->name('owner.search')->middleware('auth');
+    Route::get('filter','OwnerController@filter')->name('owner.filter')->middleware('auth');
+    Route::get('/pdf','OwnerController@generatePDF')->name('owner.pdf')->middleware('auth');
+    Route::get('pdfOwner/{owner}','OwnerController@generateOwnerPDF')->name('owner.pdfowner')->middleware('auth');
+    Route::get('stat', 'OwnerController@stat')->name('owner.stat')->middleware('auth');
+
 
 });
 

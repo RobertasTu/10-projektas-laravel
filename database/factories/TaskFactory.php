@@ -10,6 +10,7 @@ $factory->define(Task::class, function (Faker $faker) {
         'title'=>$faker->company(),
         'description'=>$faker->sentence(4),
         'type_id'=>rand(1,4),
+        'owner_id'=>rand(1,10),
         'start_date'=>$faker->dateTimeThisYear('-2 months'),
         'end_date'=>$faker->dateTimeThisYear('+2 months'),
 

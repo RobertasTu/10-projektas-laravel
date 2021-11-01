@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Type;
 use Illuminate\Http\Request;
+use PDF;
 
 class TypeController extends Controller
 {
@@ -46,7 +47,14 @@ class TypeController extends Controller
     {
         $type = new Type;
 
+        $validateVar = $request->validate ([
+          'type_title' => 'required|max:200|regex:/^[a-zA-Z]+$/u',
+          'type_description' => 'required|max:1500'
+
+        ]);
+
         $type->title = $request->type_title;
+        $type->description = $request->type_description;
 
         $type->save();
 
@@ -73,7 +81,7 @@ class TypeController extends Controller
      */
     public function edit(Type $type)
     {
-        return view('type.edit', ['type'=>$type]);
+       return view('type.edit', ['type'=>$type]);
     }
 
     /**
@@ -85,7 +93,14 @@ class TypeController extends Controller
      */
     public function update(Request $request, Type $type)
     {
+        $validateVar = $request->validate ([
+            'type_title' => 'required|max:200|regex:/^[a-zA-Z]+$/u',
+            'type_description' => 'required|max:1500'
+
+          ]);
+
         $type->title = $request->type_title;
+        $type->description = $request->type_description;
 
         $type->save();
         return redirect()->route('type.index');
@@ -112,5 +127,16 @@ class TypeController extends Controller
         $search = $request->search;
         $types = Type::query()->sortable()->where('title', 'LIKE', "%{$search}%")->orWhere('description','LIKE', "%{$search}%")->paginate(5);
         return view('type.search', ['types'=>$types]);
+    }
+    public function generateTypePDF(Type $type) {
+        view()->share('type', $type);
+        $pdf = PDF::loadView('type/pdf_type_template', $type);
+        return $pdf->download('type'.$type->id.'.pdf');
+    }
+    public function generatePDF() {
+        $types = Type::all();
+        view()->share('types', $types);
+        $pdf = PDF::loadView('type/pdf_template', $types);
+        return $pdf->download('types.pdf');
     }
 }

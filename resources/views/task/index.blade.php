@@ -2,6 +2,7 @@
 
 @section('content')
 <div class='container'>
+    <a class='btn btn-secondary' href='{{route('owner.stat')}}'>Export Statistics</a>
 
     <form action='{{route('task.search')}}' method='GET'>
         <input type='text' name='search' placeholder='enter your search key' />
@@ -21,6 +22,23 @@
                         </select>
                 </div>
                      <button type='submit' class='btn btn-primary'>Filter</button>
+
+        </div>
+
+    </form>
+
+    <form action='{{route('task.index')}}' method='GET'>
+        @csrf
+        <div class="form-group row">
+            <label for="paginationsetting" class="col-md-4 col-form-label text-md-right">{{ __('Pages') }}</label>
+                <div class='col-md-6'>
+                     <select class="form-control" name="paginationsetting">
+                        @foreach ($paginationsettings as $paginationsetting)
+                            @if ($paginationsetting->visible == 1) <option value="{{$paginationsetting->value}}">{{$paginationsetting->title}}</option>@endif
+                          @endforeach
+                        </select>
+                </div>
+                     <button type='submit' class='btn btn-primary'>Set results per page</button>
 
         </div>
 
@@ -66,6 +84,12 @@
             <option value="type_id">Type</option>
         @endif
 
+        @if ($collumnName == 'owner')
+        <option value="owner_id" selected>Owner</option>
+         @else
+        <option value="owner_id">Owner</option>
+         @endif
+
 
                 </select>
         <select name='sortBy'>
@@ -79,14 +103,18 @@
 
 
         </select>
+        <button type='submit'>Sort</button>
+    </form>
 
 <table class='table table-striped'>
+    <a class='btn btn-primary' href='{{route('task.pdf')}}'>Export tasks to PDF</a>
     <tr>
         <a class='btn btn-primary' href='{{route('task.create')}}'>Add new task<a>
         <th>@sortablelink('id', 'ID')</th>
         <th>@sortablelink('title', 'Title')</th>
         <th>@sortablelink('description', 'Description')</th>
         <th>@sortablelink('type_id', 'Type')</th>
+        <th>@sortablelink('owner_id', 'Owner')</th>
         <th>@sortablelink('start_date', 'Start date')</th>
         <th>@sortablelink('end_date', 'End_date')</th>
         <th>Actions</th>
@@ -99,6 +127,7 @@
         <td><a href="{{route('task.show', [$task])}}">{{$task->title}} </td>
         <td>{!!$task->description!!} </td>
         <td>{{ $task->taskType->title }} </td>
+        <td>{{ $task->taskOwner->name }} {{ $task->taskOwner->surname }} </td>
         <td>{{$task->start_date}} </td>
         <td>{{$task->end_date}} </td>
         <td>
@@ -122,6 +151,7 @@
         {{-- <a href='{{ route('task.index', [$task])}}' title='{{ $task->title }}'>({{ $task->title()->count()}})</a> @endforeach --}}
 
     </div>
+
 
     {{-- {{ $tasks->links() }} --}}
 

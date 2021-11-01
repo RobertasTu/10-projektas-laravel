@@ -4,8 +4,10 @@
 
 <div class='container'>
 
+
 <h1>Information about task</h1>
 <table>
+    <a href='{{route('task.pdftask', [$task])}}' class='btn btn-primary'>Export Task to PDF</a>
     <tr>
         <th>ID</th>
         <th>Title</th>

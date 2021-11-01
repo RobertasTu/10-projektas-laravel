@@ -2,7 +2,7 @@
 
 
 @section('content')
-
+<a href='{{route('type.pdftype', [$type])}}' class='btn btn-primary'>Export Type PDF</a>
 <div class='container'>
 
 <h2> ID: {{$type->id}}</h2>

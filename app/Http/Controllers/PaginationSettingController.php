@@ -25,7 +25,8 @@ class PaginationSettingController extends Controller
      */
     public function create()
     {
-        //
+        // $paginationsetting = PaginationSetting::all();
+        return view ('paginationsetting.create');
     }
 
     /**
@@ -36,7 +37,29 @@ class PaginationSettingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $paginationsetting = new PaginationSetting;
+
+        $validationVar = $request->validate ([
+            'paginationsetting_title'=>'required|regex:/^[a-zA-Z]+$/u|min:6|max:225',
+            'paginationsetting_value'=>'required|numeric|integer|gte:1',
+            'paginationsetting_visible'=> 'min:0|max:1'
+        ]);
+
+
+       $paginationsetting->title = $request->paginationsetting_title;
+       $paginationsetting->value = $request->paginationsetting_value;
+       $paginationsetting->visible = $request->paginationsetting_visible;
+
+       if($paginationsetting->visible) {
+        $paginationsetting->visible = 1;
+       } else {
+        $paginationsetting->visible = 0;
+       }
+
+        $paginationsetting->save();
+
+        return redirect()->route('paginationsetting.index');
     }
 
     /**
@@ -45,9 +68,9 @@ class PaginationSettingController extends Controller
      * @param  \App\PaginationSetting  $paginationSetting
      * @return \Illuminate\Http\Response
      */
-    public function show(PaginationSetting $paginationSetting)
+    public function show(PaginationSetting $paginationsetting)
     {
-        //
+        return view('paginationsetting.show', ['paginationsetting'=>$paginationsetting]);
     }
 
     /**
@@ -56,9 +79,10 @@ class PaginationSettingController extends Controller
      * @param  \App\PaginationSetting  $paginationSetting
      * @return \Illuminate\Http\Response
      */
-    public function edit(PaginationSetting $paginationSetting)
+    public function edit(PaginationSetting $paginationsetting)
     {
-        //
+        // $paginationsetting = PaginationSetting::all();
+        return view ('paginationsetting.edit', ['paginationsetting'=>$paginationsetting]);
     }
 
     /**
@@ -68,9 +92,27 @@ class PaginationSettingController extends Controller
      * @param  \App\PaginationSetting  $paginationSetting
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, PaginationSetting $paginationSetting)
+    public function update(Request $request, PaginationSetting $paginationsetting)
     {
-        //
+        $validationVar = $request->validate ([
+            'paginationsetting_title'=>'required|regex:/^[a-zA-Z]+$/u|min:6|max:225',
+            'paginationsetting_value'=>'required|numeric|integer|gte:1',
+            'paginationsetting_visible'=> 'numeric|integer|min:0|max:1'
+        ]);
+        $paginationsetting->title = $request->paginationsetting_title;
+       $paginationsetting->value = $request->paginationsetting_value;
+       $paginationsetting->visible = $request->paginationsetting_visible;
+       if($paginationsetting->visible) {
+        $paginationsetting->visible = 1;
+       }
+        else {
+        $paginationsetting->visible = 0;
+       }
+
+
+       $paginationsetting->save();
+       return redirect()->route('paginationsetting.index');
+
     }
 
     /**
@@ -79,8 +121,9 @@ class PaginationSettingController extends Controller
      * @param  \App\PaginationSetting  $paginationSetting
      * @return \Illuminate\Http\Response
      */
-    public function destroy(PaginationSetting $paginationSetting)
+    public function destroy(PaginationSetting $paginationsetting)
     {
-        //
+        $paginationsetting->delete();
+        return redirect()->route('paginationsetting.index');
     }
 }

@@ -2,6 +2,8 @@
 
 @section('content')
 <div class='container'>
+    <a class='btn btn-secondary' href='{{route('owner.stat')}}'>Export Statistics</a>
+    <a class='btn btn-primary' href='{{route('type.pdf')}}'>Export types to PDF</a>
 
     <form action='{{route('type.search')}}' method='GET'>
         <input type='text' name='search' placeholder='enter your search key' />
@@ -73,7 +75,7 @@
 
 </table>
 
-{{ $tasks->links() }}
+{{-- {{ $tasks->links() }} --}}
 
 {!! $types->appends(Request::except('page'))->render()  !!}
 

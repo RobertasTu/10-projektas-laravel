@@ -26,8 +26,12 @@
                                 <label for="task_title" class="col-md-4 col-form-label text-md-right">{{ __('Task title:') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="task_title" type="text" class="form-control @error('title') is-invalid @enderror" name="task_title"  required autocomplete="task_title" autofocus>
-
+                                    <input id="task_title" type="text" class="form-control @error('task_title') is-invalid @enderror" name="task_title"  value= '{{ old('task_title')}}' required autocomplete="task_title" autofocus>
+                                    @error('task_title')
+                                    <span role="alert" class="invalid-feedback">
+                                        {{$message}}
+                                    </span>
+                                @enderror
                                 </div>
                             </div>
 
@@ -36,8 +40,13 @@
 
                                 <div class="col-md-6">
 
-                                   <textarea class='summernote' name='task_description' required>
+                                   <textarea class='summernote' name='task_description' value= '{{ old('task_description')}}'required>
                                    </textarea>
+                                   @error('task_description')
+                                   <span role="alert" class="invalid-feedback">
+                                       {{$message}}
+                                   </span>
+                               @enderror
                                 </div>
                             </div>
 
@@ -52,6 +61,23 @@
                                             <option value="{{$type->id}}">{{$type->title}}</option>
                                         @endforeach
                                     </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+
+                                <label for="task_owner_id" class="col-md-4 col-form-label text-md-right">{{ __('Owner') }}</label>
+                                <div class="col-md-6">
+                                    <select class="form-control @error('task_owner_id') is-invalid @enderror"" name="task_owner_id">
+                                        @foreach ($owners as $owner)
+                                            <option value="{{$owner->id}}">{{$owner->name}} {{$owner->surname}}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('task_owner_id')
+                                    <span role="alert" class="invalid-feedback">
+                                        {{$message}}
+                                    </span>
+                                @enderror
                                 </div>
                             </div>
 
@@ -100,13 +126,7 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript">
-        $(function () {
-            $('#datetimepicker3').datetimepicker({
-                format: 'LT'
-            });
-        });
-     </script>
+
 
     <script>
 	    $(document).ready(function() {
